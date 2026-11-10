@@ -1,23 +1,35 @@
-import type { HealthResponse } from '@workbench/contracts';
+import type {
+  OrderDetail,
+  OrderSummary,
+  TrackingResult,
+} from '@workbench/contracts';
 
-export async function getHealth(): Promise<HealthResponse> {
-  const response = await fetch('/api/health', {
-    signal: AbortSignal.timeout(5000),
-  });
-  if (!response.ok) {
-    throw new Error('后端服务暂时无法连接');
+export class ApiError extends Error {
+  constructor(public readonly status: number) {
+    super(
+      status === 404
+        ? 'Order not found.'
+        : 'Unable to load data. Please try again.',
+    );
   }
-  const data: unknown = await response.json();
-  if (
-    typeof data !== 'object' ||
-    data === null ||
-    !('status' in data) ||
-    data.status !== 'ok' ||
-    !('service' in data) ||
-    data.service !== 'order-tracking-workbench'
-  ) {
-    throw new Error('健康检查响应格式无效');
-  }
-
-  return { status: data.status, service: data.service };
 }
+
+async function get<T>(path: string): Promise<T> {
+  const response = await fetch(path, { signal: AbortSignal.timeout(10000) });
+
+  if (!response.ok) {
+    throw new ApiError(response.status);
+  }
+
+  return response.json();
+}
+
+export const getOrders = () => get<{ orders: OrderSummary[] }>('/api/orders');
+
+export const getOrder = (id: string) =>
+  get<OrderDetail>('/api/orders/' + encodeURIComponent(id));
+
+export const getTracking = (id: string) =>
+  get<{ orderId: string; shipments: TrackingResult[] }>(
+    '/api/orders/' + encodeURIComponent(id) + '/tracking',
+  );

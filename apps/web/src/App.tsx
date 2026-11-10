@@ -1,76 +1,60 @@
-import { useQuery } from '@tanstack/react-query';
 import {
-  Alert,
+  AppBar,
   Box,
   Button,
-  Card,
-  CardContent,
-  Chip,
   Container,
-  LinearProgress,
   Stack,
+  Toolbar,
   Typography,
 } from '@mui/material';
-import { getHealth } from './api';
+import { Link, Route, Routes } from 'react-router';
+import { OrderDetail } from './OrderDetail';
+import { OrderList } from './OrderList';
 
 export function App() {
-  const health = useQuery({
-    queryKey: ['health'],
-    queryFn: getHealth,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-
   return (
-    <Container maxWidth="md" sx={{ py: { xs: 4, md: 8 } }}>
-      <Stack spacing={3}>
-        <Box>
-          <Typography variant="overline" color="primary">
+    <>
+      <AppBar position="static" elevation={0}>
+        <Toolbar sx={{ gap: 2 }}>
+          <Typography
+            component={Link}
+            to="/"
+            variant="h6"
+            color="inherit"
+            sx={{
+              textDecoration: 'none',
+              flexGrow: 1,
+              fontSize: { xs: '1rem', sm: '1.25rem' },
+            }}
+          >
             Order Tracking Workbench
           </Typography>
-          <Typography variant="h4" component="h1" gutterBottom>
-            订单与物流工作台
+          <Typography variant="caption" sx={{ flexShrink: 0 }}>
+            AUD · Australia
           </Typography>
-          <Typography color="text.secondary">阶段 0 · 项目准备</Typography>
-        </Box>
-        <Card>
-          <CardContent>
-            <Stack spacing={2}>
-              <Chip
-                label="基础框架已就绪"
-                color="primary"
-                sx={{ alignSelf: 'flex-start' }}
-              />
-              <Typography variant="h6" component="h2">
-                服务连接
-              </Typography>
-              {health.isFetching && (
-                <LinearProgress aria-label="检查后端连接" />
-              )}
-              {health.isSuccess && (
-                <Alert severity="success">后端健康检查通过</Alert>
-              )}
-              {health.isError && (
-                <Alert severity="error">
-                  无法连接后端，请确认 API 服务已启动。
-                </Alert>
-              )}
-              <Button
-                variant="outlined"
-                disabled={health.isFetching}
-                onClick={() => void health.refetch()}
-                sx={{ alignSelf: 'flex-start' }}
-              >
-                重新检查
-              </Button>
-            </Stack>
-          </CardContent>
-        </Card>
-        <Alert severity="info">
-          当前仅完成项目骨架。审核通过后将获取真实 SKU
-          数据，订单和物流功能尚未实现。
-        </Alert>
-      </Stack>
-    </Container>
+        </Toolbar>
+      </AppBar>
+      <Container component="main" maxWidth="xl" sx={{ py: { xs: 3, md: 5 } }}>
+        <Routes>
+          <Route path="/" element={<OrderList />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
+          <Route
+            path="*"
+            element={
+              <Stack spacing={2}>
+                <Typography variant="h4" component="h1">
+                  Page not found
+                </Typography>
+                <Box>
+                  <Button component={Link} to="/">
+                    Back to orders
+                  </Button>
+                </Box>
+              </Stack>
+            }
+          />
+        </Routes>
+      </Container>
+    </>
   );
 }
