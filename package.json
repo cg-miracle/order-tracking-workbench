@@ -1,0 +1,39 @@
+{
+  "name": "order-tracking-workbench",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web \"npm run dev -w @workbench/api\" \"npm run dev -w @workbench/web\"",
+    "build": "npm run build -w @workbench/contracts && npm run build -w @workbench/api && npm run build -w @workbench/web",
+    "start": "npm run start -w @workbench/api",
+    "typecheck": "npm run typecheck --workspaces",
+    "lint": "eslint . --max-warnings 0",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/node": "^22.0.0",
+    "concurrently": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^16.0.0",
+    "jsdom": "^26.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "~5.7.3",
+    "typescript-eslint": "8.25.0",
+    "vitest": "^3.2.0",
+    "yaml": "^2.9.1"
+  },
+  "type": "module",
+  "overrides": {
+    "light-my-request": "6.6.0"
+  }
+}
