@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { Dataset, TrackingResult } from '@workbench/contracts';
+import { trackingFromEnvironment } from './tracking.js';
 import { loadDataset } from './data.js';
 import { calculateOrder, summarizeOrder } from './orders.js';
 
@@ -8,6 +9,7 @@ export async function registerOrderRoutes(
   provided?: Dataset,
 ) {
   const data = provided ?? (await loadDataset());
+  const track = trackingFromEnvironment();
   const params = {
     type: 'object',
     required: ['id'],
@@ -45,15 +47,11 @@ export async function registerOrderRoutes(
         return reply.code(404).send({ message: 'Order not found.' });
       }
 
-      const shipments: TrackingResult[] = data.shipments
-        .filter((shipment) => shipment.orderId === order.id)
-        .map((shipment) => ({
-          ...shipment,
-          queryStatus: 'not_implemented',
-          message: 'Carrier tracking integration is not implemented.',
-          currentStatus: null,
-          lastUpdatedAt: null,
-        }));
+      const shipments: TrackingResult[] = await Promise.all(
+        data.shipments
+          .filter((shipment) => shipment.orderId === order.id)
+          .map(track),
+      );
 
       return { orderId: order.id, shipments };
     },

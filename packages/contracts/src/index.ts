@@ -110,8 +110,10 @@ export type OrderSummary = Pick<Order, 'id' | 'orderedAt' | 'status'> & {
 };
 
 export type TrackingResult = Shipment & {
-  queryStatus: 'not_implemented';
+  queryStatus: 'available' | 'unavailable' | 'not_implemented';
   message: string;
-  currentStatus: null;
-  lastUpdatedAt: null;
+  currentStatus: string | null;
+  lastUpdatedAt: string | null;
+  events: { description: string; date: string; location: string | null }[];
+  source: 'auspost-test' | null;
 };

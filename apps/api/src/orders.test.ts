@@ -213,7 +213,7 @@ describe('订单接口', () => {
       expect(result.json()).toMatchObject({
         shipments: [
           {
-            queryStatus: 'not_implemented',
+            queryStatus: 'unavailable',
             currentStatus: null,
             lastUpdatedAt: null,
           },

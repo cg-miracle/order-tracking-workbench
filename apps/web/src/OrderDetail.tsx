@@ -1,3 +1,4 @@
+import { ShipmentTracking } from './ShipmentTracking';
 import type { OrderDetail as Detail, OrderTotals } from '@workbench/contracts';
 import {
   Alert,
@@ -23,7 +24,7 @@ import {
   ProductPlaceholder,
   RequestError,
 } from './components';
-import { carrierLabel, formatDate, formatMoney } from './format';
+import { formatDate, formatMoney } from './format';
 import { useOrder, useTracking } from './order-hooks';
 
 function Summary({ totals }: { totals: OrderTotals }) {
@@ -228,6 +229,11 @@ function Tracking({ order }: { order: Detail }) {
         {tracking.isPending && (
           <Typography role="status">Loading tracking information…</Typography>
         )}
+        {tracking.isFetching && !tracking.isPending && (
+          <Typography role="status">
+            Refreshing tracking information…
+          </Typography>
+        )}
         {tracking.isError && (
           <Alert severity="warning">
             Tracking could not be loaded. Order details are still available.
@@ -239,24 +245,11 @@ function Tracking({ order }: { order: Detail }) {
           );
 
           return (
-            <Box
+            <ShipmentTracking
               key={shipment.id}
-              sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}
-            >
-              <Stack spacing={0.5} sx={{ overflowWrap: 'anywhere' }}>
-                <Typography fontWeight={600}>
-                  {carrierLabel(shipment.carrier)}
-                </Typography>
-                <Typography variant="body2">
-                  {shipment.trackingNumber}
-                </Typography>
-                {result && (
-                  <Typography variant="body2" color="text.secondary">
-                    Not implemented — {result.message}
-                  </Typography>
-                )}
-              </Stack>
-            </Box>
+              shipment={shipment}
+              result={result}
+            />
           );
         })}
         <Typography variant="caption" color="text.secondary">

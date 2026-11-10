@@ -89,6 +89,7 @@ function mockApi(order = detail, trackingFails = false) {
               ...shipment,
               queryStatus: 'not_implemented',
               message: 'Carrier tracking integration is not implemented.',
+              events: [],
               currentStatus: null,
               lastUpdatedAt: null,
             })),
@@ -246,4 +247,42 @@ it('未知页面显示英文导航提示', () => {
   expect(
     screen.getByRole('heading', { name: 'Page not found' }),
   ).toBeInTheDocument();
+});
+
+it('展示承运商返回的状态、更新时间和事件，标明测试环境', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () =>
+        url.endsWith('/tracking')
+          ? {
+              orderId: detail.id,
+              shipments: [
+                {
+                  ...detail.shipments[0],
+                  queryStatus: 'available',
+                  currentStatus: 'Delivered in Full',
+                  lastUpdatedAt: '2025-02-13T11:49:59+11:00',
+                  message: 'Response from the carrier test environment.',
+                  source: 'auspost-test',
+                  events: [
+                    {
+                      description: 'Delivered at facility',
+                      date: '2025-02-13T11:49:59+11:00',
+                      location: 'Test location',
+                    },
+                  ],
+                },
+              ],
+            }
+          : detail,
+    })),
+  );
+  renderApp('/orders/ORDER-TEST');
+
+  expect(await screen.findByText(/Delivered in Full/)).toBeInTheDocument();
+  expect(screen.getByText(/Last updated:/)).toHaveTextContent('13 Feb 2025');
+  expect(screen.getByText(/Delivered at facility/)).toBeInTheDocument();
+  expect(screen.getByText(/cached for up to 60 seconds/)).toBeInTheDocument();
 });

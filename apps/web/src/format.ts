@@ -28,3 +28,18 @@ export function statusLabel(status: string) {
 export function carrierLabel(carrier: 'auspost-startrack' | 'tnt') {
   return carrier === 'tnt' ? 'TNT' : 'StarTrack / Australia Post';
 }
+
+const dateTime = new Intl.DateTimeFormat('en-AU', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+  timeZone: 'Australia/Sydney',
+  timeZoneName: 'short',
+});
+
+export function formatDateTime(value: string) {
+  return dateTime.format(new Date(value));
+}
