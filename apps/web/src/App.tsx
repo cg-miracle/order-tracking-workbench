@@ -20,6 +20,7 @@ export function App() {
     retry: false,
     refetchOnWindowFocus: false,
   });
+
   return (
     <Container maxWidth="md" sx={{ py: { xs: 4, md: 8 } }}>
       <Stack spacing={3}>
