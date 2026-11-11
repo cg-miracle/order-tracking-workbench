@@ -1,3 +1,4 @@
+import { requestTntTracking, type TntConfig } from './tnt.js';
 import { z } from 'zod';
 import type { Shipment, TrackingResult } from '@workbench/contracts';
 
@@ -27,7 +28,11 @@ const responseSchema = z.object({
 });
 
 type Config = { key: string; password: string; account: string };
-type Options = { config?: Config; fetcher?: typeof fetch };
+type Options = {
+  config?: Config | undefined;
+  tntConfig?: TntConfig | undefined;
+  fetcher?: typeof fetch;
+};
 
 function unavailable(shipment: Shipment, message: string): TrackingResult {
   return {
@@ -107,6 +112,7 @@ export function parseTracking(
 
 export function createTrackingService({
   config,
+  tntConfig,
   fetcher = fetch,
 }: Options = {}) {
   const cache = new Map<
@@ -165,25 +171,16 @@ export function createTrackingService({
   }
 
   return function track(shipment: Shipment): Promise<TrackingResult> {
-    if (shipment.carrier === 'tnt') {
-      return Promise.resolve({
-        ...shipment,
-        queryStatus: 'not_implemented',
-        message: 'TNT integration is not implemented.',
-        currentStatus: null,
-        lastUpdatedAt: null,
-        events: [],
-        source: null,
-      });
-    }
-
     const cached = cache.get(shipment.id);
 
     if (cached && cached.expires > Date.now()) {
       return cached.value;
     }
 
-    const value = request(shipment);
+    const value =
+      shipment.carrier === 'tnt'
+        ? requestTntTracking(shipment, tntConfig, fetcher)
+        : request(shipment);
     cache.set(shipment.id, { expires: Date.now() + 60000, value });
 
     return value;
@@ -195,7 +192,12 @@ export function trackingFromEnvironment() {
   const password = process.env.AUSPOST_API_PASSWORD;
   const account = process.env.AUSPOST_ACCOUNT_NUMBER;
 
-  return createTrackingService(
-    key && password && account ? { config: { key, password, account } } : {},
-  );
+  const username = process.env.TNT_TRACKING_USERNAME;
+  const tntPassword = process.env.TNT_TRACKING_PASSWORD;
+
+  return createTrackingService({
+    config: key && password && account ? { key, password, account } : undefined,
+    tntConfig:
+      username && tntPassword ? { username, password: tntPassword } : undefined,
+  });
 }

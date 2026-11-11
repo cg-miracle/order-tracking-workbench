@@ -177,8 +177,8 @@ describe('订单接口', () => {
       expect(list.map((order) => order.itemCount)).toEqual([5, 4]);
       expect(list.map((order) => order.shipmentCount)).toEqual([1, 2]);
       expect(list.map((order) => order.totals.totalAud)).toEqual([
-        '2131.01',
-        '1655.01',
+        '2146.76',
+        '1670.76',
       ]);
 
       const result = await app.inject('/api/orders/' + sample.orders[1]!.id);

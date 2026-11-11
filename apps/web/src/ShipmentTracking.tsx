@@ -18,6 +18,10 @@ export function ShipmentTracking({
   shipment: Shipment;
   result: TrackingResult | undefined;
 }) {
+  const eventTime = (date: string) =>
+    result?.source === 'tnt'
+      ? date.replace('T', ' ') + ' (carrier local time)'
+      : formatDateTime(date);
   const available = result?.queryStatus === 'available';
 
   return (
@@ -75,7 +79,7 @@ export function ShipmentTracking({
           <Typography variant="body2" color="text.secondary">
             Last updated:{' '}
             <Box component="time" dateTime={result.lastUpdatedAt}>
-              {formatDateTime(result.lastUpdatedAt)}
+              {eventTime(result.lastUpdatedAt)}
             </Box>
           </Typography>
         )}
@@ -124,7 +128,7 @@ export function ShipmentTracking({
                       component="time"
                       dateTime={event.date}
                     >
-                      {formatDateTime(event.date)}
+                      {eventTime(event.date)}
                     </Typography>
                     {event.location && (
                       <Typography variant="caption" color="text.secondary">

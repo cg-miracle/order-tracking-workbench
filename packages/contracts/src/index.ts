@@ -89,7 +89,12 @@ export type OrderTotals = {
   totalAud: string | null;
   shipping: {
     amountAud: string;
-    source: 'not_implemented';
+    source: 'not_implemented' | 'estimate' | 'unavailable';
+    breakdown?: {
+      shipmentId: string;
+      amountAud: string;
+      billableWeightKg: string | null;
+    }[];
     message: string;
   };
 };
@@ -115,5 +120,5 @@ export type TrackingResult = Shipment & {
   currentStatus: string | null;
   lastUpdatedAt: string | null;
   events: { description: string; date: string; location: string | null }[];
-  source: 'auspost-test' | null;
+  source: 'auspost-test' | 'tnt' | null;
 };

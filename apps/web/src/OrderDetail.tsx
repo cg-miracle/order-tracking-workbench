@@ -54,7 +54,7 @@ function Summary({ totals }: { totals: OrderTotals }) {
           </Stack>
         ))}
         <Typography variant="caption" color="text.secondary">
-          {totals.shipping.message} Zero is not a carrier quote.
+          {totals.shipping.message}
         </Typography>
         <Divider />
         <Stack direction="row" justifyContent="space-between" spacing={2}>

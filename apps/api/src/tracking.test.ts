@@ -98,7 +98,7 @@ describe('物流请求', () => {
 
     expect((await track(shipment)).queryStatus).toBe('unavailable');
     expect((await track({ ...shipment, carrier: 'tnt' })).queryStatus).toBe(
-      'not_implemented',
+      'unavailable',
     );
     expect(fetcher).not.toHaveBeenCalled();
   });

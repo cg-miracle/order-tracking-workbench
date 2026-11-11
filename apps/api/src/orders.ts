@@ -1,3 +1,4 @@
+import { estimateShipping } from './shipping.js';
 import { Decimal } from 'decimal.js';
 import type {
   Dataset,
@@ -85,6 +86,7 @@ export function calculateOrder(order: Order, data: Dataset): OrderDetail {
     ? items.reduce((sum, item) => sum.add(item.subtotalExGstAud!), new Money(0))
     : null;
   const gst = subtotal ? subtotal.mul('0.10').toDecimalPlaces(2) : null;
+  const shipping = estimateShipping(order, items, shipments);
 
   return {
     ...order,
@@ -96,12 +98,11 @@ export function calculateOrder(order: Order, data: Dataset): OrderDetail {
       currency: 'AUD',
       subtotalExGstAud: subtotal ? money(subtotal) : null,
       gstAud: gst ? money(gst) : null,
-      totalAud: subtotal && gst ? money(subtotal.add(gst)) : null,
-      shipping: {
-        amountAud: '0.00',
-        source: 'not_implemented',
-        message: 'Shipping estimation is not implemented.',
-      },
+      totalAud:
+        subtotal && gst
+          ? money(subtotal.add(gst).add(shipping.amountAud))
+          : null,
+      shipping,
     },
   };
 }
