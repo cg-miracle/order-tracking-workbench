@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Dataset, OrderDetail, OrderSummary } from '@workbench/contracts';
-import { loadDataset, parseDataset } from './data.js';
+import { loadDataset, parseDataset } from '../data/data.js';
 import { calculateOrder } from './orders.js';
-import { buildApp } from './app.js';
+import { buildApp } from '../app.js';
 
 const sample = await loadDataset();
 

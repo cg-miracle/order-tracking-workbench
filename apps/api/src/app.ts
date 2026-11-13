@@ -1,5 +1,5 @@
 import type { Dataset } from '@workbench/contracts';
-import { registerOrderRoutes } from './order-routes.js';
+import { registerOrderRoutes } from './orders/order-routes.js';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { existsSync } from 'node:fs';

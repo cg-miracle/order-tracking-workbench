@@ -8,8 +8,8 @@ import {
   Typography,
 } from '@mui/material';
 import { Link, Route, Routes } from 'react-router';
-import { OrderDetail } from './OrderDetail';
-import { OrderList } from './OrderList';
+import { OrderDetail } from '../features/orders/OrderDetail';
+import { OrderList } from '../features/orders/OrderList';
 
 export function App() {
   return (

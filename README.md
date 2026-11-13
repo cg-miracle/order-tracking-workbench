@@ -41,6 +41,11 @@ npm start
 
 ## 技术与目录
 
+源码按功能组织，测试与对应模块放在一起：
+
+- `apps/api/src`：`orders/` 订单路由与计算、`tracking/` 物流服务与 TNT 适配器、`shipping/` 运费估算、`data/` 数据读取；根目录保留服务入口及应用装配。
+- `apps/web/src`：`app/` 应用路由与主题、`features/orders/` 订单页面与查询 hooks、`features/tracking/` 物流展示、`shared/` API 客户端、通用组件及格式化；根目录保留 `main.tsx`。
+
 | 模块                                 | 内容                                           |
 | ------------------------------------ | ---------------------------------------------- |
 | apps/web                             | React、MUI、React Router、TanStack Query、Vite |

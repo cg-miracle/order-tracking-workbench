@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { Shipment, TrackingResult } from '@workbench/contracts';
-import { carrierLabel, formatDateTime } from './format';
+import { carrierLabel, formatDateTime } from '../../shared/format';
 
 export function ShipmentTracking({
   shipment,

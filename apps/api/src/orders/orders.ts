@@ -1,4 +1,4 @@
-import { estimateShipping } from './shipping.js';
+import { estimateShipping } from '../shipping/shipping.js';
 import { Decimal } from 'decimal.js';
 import type {
   Dataset,

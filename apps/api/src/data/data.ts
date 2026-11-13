@@ -103,7 +103,7 @@ export function parseDataset(input: unknown): Dataset {
 }
 
 export async function loadDataset(): Promise<Dataset> {
-  const root = new URL('../../../data/', import.meta.url);
+  const root = new URL('../../../../data/', import.meta.url);
   const read = async (name: string): Promise<unknown> =>
     JSON.parse(await readFile(new URL(name, root), 'utf8'));
   const [orders, products, shipments] = await Promise.all(

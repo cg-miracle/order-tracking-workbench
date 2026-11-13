@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getOrder, getOrders, getTracking } from './api';
+import { getOrder, getOrders, getTracking } from '../../shared/api';
 
 export function useOrders() {
   return useQuery({ queryKey: ['orders'], queryFn: getOrders });

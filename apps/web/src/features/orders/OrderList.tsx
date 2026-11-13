@@ -1,7 +1,12 @@
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router';
-import { LoadingView, OrderStatus, Panel, RequestError } from './components';
-import { formatDate, formatMoney } from './format';
+import {
+  LoadingView,
+  OrderStatus,
+  Panel,
+  RequestError,
+} from '../../shared/components';
+import { formatDate, formatMoney } from '../../shared/format';
 import { useOrders } from './order-hooks';
 
 export function OrderList() {

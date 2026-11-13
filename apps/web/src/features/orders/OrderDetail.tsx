@@ -1,4 +1,4 @@
-import { ShipmentTracking } from './ShipmentTracking';
+import { ShipmentTracking } from '../tracking/ShipmentTracking';
 import type { OrderDetail as Detail, OrderTotals } from '@workbench/contracts';
 import {
   Alert,
@@ -16,15 +16,15 @@ import {
   Typography,
 } from '@mui/material';
 import { Link, useParams } from 'react-router';
-import { ApiError } from './api';
+import { ApiError } from '../../shared/api';
 import {
   LoadingView,
   OrderStatus,
   Panel,
   ProductPlaceholder,
   RequestError,
-} from './components';
-import { formatDate, formatMoney } from './format';
+} from '../../shared/components';
+import { formatDate, formatMoney } from '../../shared/format';
 import { useOrder, useTracking } from './order-hooks';
 
 function Summary({ totals }: { totals: OrderTotals }) {

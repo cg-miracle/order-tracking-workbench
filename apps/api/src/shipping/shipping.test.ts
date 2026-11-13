@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { loadDataset } from './data.js';
-import { calculateOrder } from './orders.js';
+import { loadDataset } from '../data/data.js';
+import { calculateOrder } from '../orders/orders.js';
 
 const sample = await loadDataset();
 

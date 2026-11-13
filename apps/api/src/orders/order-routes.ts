@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { Dataset, TrackingResult } from '@workbench/contracts';
-import { trackingFromEnvironment } from './tracking.js';
-import { loadDataset } from './data.js';
+import { trackingFromEnvironment } from '../tracking/tracking.js';
+import { loadDataset } from '../data/data.js';
 import { calculateOrder, summarizeOrder } from './orders.js';
 
 export async function registerOrderRoutes(
